@@ -410,6 +410,15 @@ bool GeoFeatureGroupExtension::extensionGetSubObject(DocumentObject*& ret,
     else if ((dot = strchr(subname, '.'))) {
         if (subname[0] != '$') {
             ret = Group.findUsingMap(std::string(subname, dot));
+            if (!ret) {
+                auto doc = getExtendedObject()->getDocument();
+                if (doc) {
+                    auto obj = doc->getObject(std::string(subname, dot).c_str());
+                    if (obj) {
+                        ret = obj;
+                    }
+                }
+            }
         }
         else {
             std::string name = std::string(subname + 1, dot);
